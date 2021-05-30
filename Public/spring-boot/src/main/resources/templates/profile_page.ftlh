@@ -16,6 +16,7 @@
     <li class="lis"><a href="/paper/create">Написать пост</a></li>
     <li class="lis"><a href="/files/upload">Загрузить файлы</a></li>
     <li class="lis"><a href="/papers/user/${user.id}">Мои посты</a></li>
+    <li class="lis"><a href="/papers">Все посты</a></li>
 </ul>
 <div class="text">
     <h1>${user.getFullName()}</h1>

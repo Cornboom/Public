@@ -18,7 +18,11 @@
     <li class="lis"><a class="active" href="/profile">Профиль</a></li>
     <li class="lis"><a href="/files/upload">Загрузить файлы</a></li>
 </ul>
-<input type="text" placeholder="Введите название поста" id="search_input">
+
+<input type="text" placeholder="Введите название поста" id="search_input"
+       style="margin: 50px 20px 10px;
+       width: 300px; border-radius: 5px;
+       border-color: #4b05f6; height: 20px;">
 
 <ul id="posts_list">
     <#if papers??>

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import ru.itis.springbootdemo.dto.PageablePaperDto;
 import ru.itis.springbootdemo.dto.PaperDto;
 import ru.itis.springbootdemo.dto.PapersPage;
 import ru.itis.springbootdemo.models.Paper;
@@ -84,11 +85,21 @@ public class PapersServiceImpl implements PapersService {
 
     @Override
     public List<PaperDto> findPapersByTemplate(String template) {
-        return PaperDto.from(papersRepository.findAllByTitleLikeOrderByIdDesc("%"+template+"%"));
+        return PaperDto.from(papersRepository.findAllByTitleLikeOrderByIdDesc("%" + template + "%"));
     }
 
     @Override
     public List<PaperDto> findPapersFromUserId(Long userId) {
         return PaperDto.from(papersRepository.findPapersFromUserId(userId));
+    }
+
+    @Override
+    public PageablePaperDto getPageablePapers(Integer pageId) {
+        PageRequest pageRequest = PageRequest.of(pageId - 1, 3);
+        Page<Paper> papersPage = papersRepository.findAll(pageRequest);
+        return PageablePaperDto.builder()
+                .pageCount(papersPage.getTotalPages())
+                .papers(PaperDto.from(papersPage.getContent()))
+                .build();
     }
 }

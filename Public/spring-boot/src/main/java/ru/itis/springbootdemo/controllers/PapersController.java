@@ -1,12 +1,12 @@
 package ru.itis.springbootdemo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.springbootdemo.dto.PageablePaperDto;
 import ru.itis.springbootdemo.dto.PaperDto;
 import ru.itis.springbootdemo.dto.PapersPage;
 import ru.itis.springbootdemo.dto.UserDto;
@@ -44,7 +44,7 @@ public class PapersController {
     public String createPost(@AuthenticationPrincipal UserDetailsImpl userDetails, PaperDto paperDto) {
         paperDto.setAuthorId(userDetails.getUser().getId());
         papersService.save(paperDto);
-        return "redirect:/papers";
+        return "redirect:/papers/pageble/1";
     }
 
     @GetMapping("/paper/{paperId}/remove/{userId}")
@@ -52,7 +52,7 @@ public class PapersController {
         if (userId.equals(userDetails.getUser().getId())) {
             papersService.deleteById(paperId);
         }
-        return "redirect:/papers";
+        return "redirect:/papers/pageble/1";
     }
 
     @GetMapping("/paper/{paperId}/edit/{userId}")
@@ -63,7 +63,7 @@ public class PapersController {
             model.addAttribute("paper", paperDto);
             return "edit_post";
         }
-        return "redirect:/papers";
+        return "redirect:/papers/pageble/1";
     }
 
     @PostMapping("/paper/{paperId}/edit/{userId}")
@@ -71,7 +71,7 @@ public class PapersController {
         if (userId.equals(userDetails.getUser().getId())) {
             papersService.editPaper(paperDto);
         }
-        return "redirect:/papers";
+        return "redirect:/papers/pageble/1";
     }
 
     @GetMapping("/papers/get-by-title")
@@ -100,5 +100,13 @@ public class PapersController {
         model.addAttribute("papers", papers);
 
         return "user_papers";
+    }
+
+    @GetMapping("/papers/pageble/{pageId}")
+    public String getPageblePapers(@PathVariable("pageId") Integer pageId, Model model) {
+        PageablePaperDto papers = papersService.getPageablePapers(pageId);
+        model.addAttribute("pageable", papers);
+        model.addAttribute("currentPage", pageId);
+        return "pageable_papers";
     }
 }
